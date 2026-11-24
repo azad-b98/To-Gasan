@@ -1,10 +1,10 @@
         // =========================================================================
         // KONFIGURASI SUPABASE (MASUKKAN URL & ANON KEY PROJEK SUPABASE ANDA DI SINI)
         // =========================================================================
-        const SUPABASE_URL = '';      // Contoh: 'https://xyzcompany.supabase.co'
-        const SUPABASE_ANON_KEY = ''; // Contoh: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
-        // =========================================================================
+        const SUPABASE_URL ='https://yrwilrsvhqkowpbyhheo.supabase.co';
 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd2lscnN2aHFrb3dwYnloaGVvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5NTQ2MTU5NSwiZXhwIjoyMTExMDM3NTk1fQ.cQ4hFRnbFyP6N4iV-18325eX4vVd9ILJmcC9I4dEK3I';
+        
         // --- PEMBOLEHUBAH GLOBAL & KEADAAN (STATE) ---
         let workOrders = [];
         let isAdminMode = false;
@@ -81,7 +81,7 @@
                     if (error) throw error;
                     isSupabaseConnected = true;
                 } catch (err) {
-                    console.warn('Sambungan Supabase tidak aktif, menggunakan simpanan lokal:', err.message);
+                    console.warn('Supabase is not active, use local storage:', err.message);
                     isSupabaseConnected = false;
                 }
             } else {
