@@ -67,7 +67,28 @@
             initCharts();
             await initDatabaseConnection();
             await loadWorkOrders();
+            if (isSupabaseConnected) {
+                subscribeToRealtimeChanges();
+            }
         });
+
+        function subscribeToRealtimeChanges() {
+            if (!supabaseClient) return;
+
+            supabaseClient
+                .channel('work-orders-live')
+                .on(
+                    'postgres_changes',
+                    { event: '*', schema: 'public', table: 'work_orders' },
+                    async () => {
+                        // Re-fetch latest rows whenever any device inserts, updates, or deletes
+                        await loadWorkOrders();
+                    }
+                )
+                .subscribe((status) => {
+                    console.log('Supabase Realtime status:', status);
+                });
+        }
 
         // --- PENGURUSAN SAMBUNGAN SUPABASE & FALLBACK LOKAL AUTOMATIK ---
         async function initDatabaseConnection() {
