@@ -3,7 +3,7 @@
         // =========================================================================
         const SUPABASE_URL ='https://yrwilrsvhqkowpbyhheo.supabase.co';
 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd2lscnN2aHFrb3dwYnloaGVvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5NTQ2MTU5NSwiZXhwIjoyMTExMDM3NTk1fQ.cQ4hFRnbFyP6N4iV-18325eX4vVd9ILJmcC9I4dEK3I';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd2lscnN2aHFrb3dwYnloaGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU0NjE1OTUsImV4cCI6MjExMTAzNzU5NX0.JypvmlE1j-NuN1M6kv4_cYeYjvWyvqUTj_iRL0in7IQ';
         
         // --- PEMBOLEHUBAH GLOBAL & KEADAAN (STATE) ---
         let workOrders = [];
@@ -16,50 +16,7 @@
         let statusDonutChart = null;
         let typeBarChart = null;
 
-        // Data Contoh Permulaan (Digunakan jika belum sambung Supabase & localStorage kosong)
-        const SAMPLE_DATA = [
-            {
-                id: 'TG-1001',
-                work_type: 'Layout',
-                location: 'Menara To-Gasan HQ, Cyberjaya',
-                block: 'Blok A',
-                level: 'Tingkat 12',
-                job_category: 'Pelan Susun Atur Elektrik & Pencahayaan',
-                pic_name: 'Ahmad Razak',
-                status: 'Selesai',
-                completion_note: 'Pelan lengkap disemak dan diluluskan oleh pengurus projek.',
-                created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-                completed_at: new Date(Date.now() - 86400000 * 1).toISOString()
-            },
-            {
-                id: 'TG-1002',
-                work_type: 'Detail',
-                location: 'Hab Logistik Shah Alam',
-                block: null,
-                level: null,
-                job_category: 'Lukisan Perincian Sambungan Keluli',
-                pic_name: 'Nurul Huda',
-                status: 'Dalam Proses',
-                completion_note: null,
-                created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-                completed_at: null
-            },
-            {
-                id: 'TG-1003',
-                work_type: 'Layout',
-                location: 'Kompleks Industri Batu Kawan',
-                block: 'Blok C',
-                level: 'Tingkat Bawah (G)',
-                job_category: 'Susun Atur Paip Bomba & Sprinkler',
-                pic_name: 'Hafiz Zulkifli',
-                status: 'Dalam Proses',
-                completion_note: null,
-                created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-                completed_at: null
-            }
-        ];
-
-        // --- INISIALISASI APLIKASI ---
+       // --- INISIALISASI APLIKASI ---
         window.addEventListener('DOMContentLoaded', async () => {
             if (window.lucide) {
                 lucide.createIcons();
@@ -135,33 +92,15 @@
                     if (error) throw error;
                     workOrders = data || [];
                 } catch (err) {
-                    loadFromLocalStorage();
+                    workOrders = [];
                 }
             } else {
-                loadFromLocalStorage();
+                workOrders = [];
             }
             refreshAllUI();
         }
 
-        function loadFromLocalStorage() {
-            const stored = localStorage.getItem('togasan_work_orders');
-            if (stored) {
-                try {
-                    workOrders = JSON.parse(stored);
-                } catch (e) {
-                    workOrders = [...SAMPLE_DATA];
-                    saveToLocalStorage();
-                }
-            } else {
-                workOrders = [...SAMPLE_DATA];
-                saveToLocalStorage();
-            }
-        }
-
-        function saveToLocalStorage() {
-            localStorage.setItem('togasan_work_orders', JSON.stringify(workOrders));
-        }
-
+        
         // Tambah Arahan Kerja Baru
         async function handleCreateWorkOrder(e) {
             e.preventDefault();
@@ -202,7 +141,6 @@
                 } else {
                     newRecord.id = 'TG-' + Math.floor(1000 + Math.random() * 9000);
                     workOrders.unshift(newRecord);
-                    saveToLocalStorage();
                 }
 
                 // Reset borang, kekalkan jenis arahan semasa & tutup modal pendaftaran
@@ -244,7 +182,7 @@
                     workOrders[idx].status = 'Selesai';
                     workOrders[idx].completion_note = note;
                     workOrders[idx].completed_at = completedAt;
-                    if (!isSupabaseConnected) saveToLocalStorage();
+                    if (!isSupabaseConnected);
                 }
 
                 closeCompleteModal();
@@ -273,7 +211,7 @@
                 }
 
                 workOrders = workOrders.filter(item => String(item.id) !== String(id));
-                if (!isSupabaseConnected) saveToLocalStorage();
+                if (!isSupabaseConnected);
 
                 closeDeleteModal();
                 refreshAllUI();
@@ -372,7 +310,7 @@
             statusDonutChart = new Chart(ctxDonut, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Dah Siap', 'Dalam Proses'],
+                    labels: ['Selesai', 'Dalam Proses'],
                     datasets: [{
                         data: [0, 0],
                         backgroundColor: ['#10b981', '#f59e0b'],
@@ -576,9 +514,9 @@
                 const locationExtra = item.work_type === 'Layout'
                     ? `<div class="text-xs text-slate-500 mt-1 flex items-center gap-2">
                          <span class="px-2 py-0.5 rounded bg-slate-100 font-semibold text-slate-600">Blok: ${escapeHTML(item.block || '-')}</span>
-                         <span class="px-2 py-0.5 rounded bg-slate-100 font-semibold text-slate-600">Tingkat: ${escapeHTML(item.level || '-')}</span>
+                         <span class="px-2 py-0.5 rounded bg-slate-100 font-semibold text-slate-600">No/Aras: ${escapeHTML(item.level || '-')}</span>
                        </div>`
-                    : `<span class="inline-block text-[11px] text-slate-400 italic mt-0.5">Arahan Detail (Tanpa Blok/Tingkat)</span>`;
+                    : `<span class="inline-block text-[11px] text-slate-400 italic mt-0.5">Detail (Tanpa Blok/Aras)</span>`;
 
                 return `
                     <tr class="hover:bg-indigo-50/30 transition">
@@ -607,7 +545,7 @@
                         <td class="py-4 px-5 align-top max-w-xs">
                             ${isDone ? `
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-700">
-                                    <i class="fa-solid fa-circle-check"></i> Dah Siap
+                                    <i class="fa-solid fa-circle-check"></i> Selesai
                                 </span>
                                 <div class="mt-1.5 p-2 rounded-xl bg-emerald-50/70 border border-emerald-100 text-xs text-slate-700">
                                     <span class="font-bold text-emerald-800">Nota:</span> ${escapeHTML(item.completion_note || '-')}
@@ -622,7 +560,7 @@
                         <td class="py-4 px-5 align-top text-right whitespace-nowrap">
                             <div class="inline-flex items-center gap-2">
                                 ${!isDone ? `
-                                    <button onclick="openCompleteModal('${item.id}')" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold shadow-sm transition inline-flex items-center gap-1.5 cursor-pointer">
+                                    <button onclick="openCompleteModal('${item.id}')" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-300 from-emerald-200 hover:emerald-500 text-xs font-bold shadow-sm transition inline-flex items-center gap-1.5 cursor-pointer">
                                         <i class="fa-solid fa-check"></i> Selesai
                                     </button>
                                 ` : ''}
@@ -653,7 +591,7 @@
                                 </span>
                                 ${isDone ? `
                                     <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-700">
-                                        <i class="fa-solid fa-circle-check mr-1"></i>Dah Siap
+                                        <i class="fa-solid fa-circle-check mr-1"></i>Selesai
                                     </span>
                                 ` : `
                                     <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-700">
@@ -671,7 +609,7 @@
                             ${item.work_type === 'Layout' ? `
                                 <div class="flex flex-wrap gap-2 mt-2.5">
                                     <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">Blok: ${escapeHTML(item.block || '-')}</span>
-                                    <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold">Tingkat: ${escapeHTML(item.level || '-')}</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold">No/Aras: ${escapeHTML(item.level || '-')}</span>
                                 </div>
                             ` : ''}
 
